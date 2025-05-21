@@ -1,0 +1,17 @@
+@OptixTechTest_HostAddress = https://localhost:7192
+
+# Example query, get first 20 English dramas with Corene Fahey and Shane Sporer, ordered by popularity descending
+
+POST {{OptixTechTest_HostAddress}}/api/v1/movies/search
+Content-Type: application/json
+
+{
+  "query": null,
+  "language": "en",
+  "genres": ["Drama"],
+  "actors": ["Corene Fahey", "Shane Sporer"],
+  "direction": "Descending",
+  "orderBy": "Popularity",
+  "cursor": 0,
+  "limit": 20
+}

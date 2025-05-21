@@ -1,0 +1,36 @@
+﻿networks:
+  dev:
+    driver: bridge
+
+services:
+  optixtechtest:
+    image: optixtechtest
+    ports:
+      - "5096:80"
+    build:
+      context: .
+      dockerfile: OptixTechTest/Dockerfile
+    depends_on:
+      - "db"
+    environment:
+      - ConnectionStrings__DefaultConnection=User id=postgres;Password=postgres;Server=db;Port=5432;Database=MovieDb;Pooling=true;
+      - ASPNETCORE_URLS=http://+:80
+    networks:
+      - dev
+  db:
+    image: postgres
+    container_name: db
+    ports:
+      - "5433:5432"
+    environment:      
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: MovieDb    
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dev
+
+volumes:
+  postgres_data:
