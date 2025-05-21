@@ -3,8 +3,15 @@ using OptixTechTest.Core.Models;
 
 namespace OptixTechTest.Api.v1.Validators;
 
+/// <summary>
+/// Validator for the MovieSearchInput model that ensures all search parameters meet the required criteria.
+/// </summary>
 public class MovieSearchInputValidator : AbstractValidator<MovieSearchInput>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MovieSearchInputValidator"/> class.
+    /// Sets up validation rules for movie search parameters.
+    /// </summary>
     public MovieSearchInputValidator()
     {
         RuleFor(m => m.Query)

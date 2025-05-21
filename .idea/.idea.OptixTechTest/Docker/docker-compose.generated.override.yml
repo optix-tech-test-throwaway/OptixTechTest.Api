@@ -2,21 +2,21 @@
 services:
   optixtechtest:
     build:
-      context: "/Users/ojm/source/OptixTechTest"
+      context: "/Users/ojm/source/repos/OptixTechTest.Api"
       dockerfile: "OptixTechTest/Dockerfile"
       target: "base"
     command: []
     entrypoint:
     - "dotnet"
-    - "/app/bin/Release/net9.0/OptixTechTest.dll"
+    - "/app/bin/Debug/net9.0/OptixTechTest.dll"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
     image: "optixtechtest:dev"
     ports: []
     volumes:
-    - "/Users/ojm/source/OptixTechTest/OptixTechTest:/app:rw"
-    - "/Users/ojm/source/OptixTechTest:/src:rw"
+    - "/Users/ojm/source/repos/OptixTechTest.Api/OptixTechTest:/app:rw"
+    - "/Users/ojm/source/repos/OptixTechTest.Api:/src:rw"
     - "/Users/ojm/.microsoft/usersecrets:/home/app/.microsoft/usersecrets"
     - "/Users/ojm/.nuget/packages:/home/app/.nuget/packages"
     working_dir: "/app"

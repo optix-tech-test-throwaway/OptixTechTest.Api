@@ -4,7 +4,7 @@
 	<s:String x:Key="/Default/CodeInspection/Highlighting/SweaWarningsMode/@EntryValue">ShowAndRun</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=cc4116d3_002D9728_002D4f7a_002Daff4_002D948e5ff0d359/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="CanSearchMoviesByTitle" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
-    &lt;TestId&gt;xUnit::D42FB57E-FF2E-4199-B548-B5E80B4C6710::net9.0::OptixTechTest.UnitTests.MovieEndpointsV1Tests.DoesValidateMovieSearchInput&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::D42FB57E-FF2E-4199-B548-B5E80B4C6710::net9.0::OptixTechTest.UnitTests.MovieEndpointsV1Tests&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	</wpf:ResourceDictionary>

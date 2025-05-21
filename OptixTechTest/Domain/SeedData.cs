@@ -10,8 +10,15 @@ using OptixTechTest.Domain.Models;
 
 namespace OptixTechTest.Domain;
 
+/// <summary>
+/// Provides methods for seeding the database with initial movie data.
+/// </summary>
 public static partial class SeedData
 {
+    /// <summary>
+    /// Seeds the database with movie data if it's empty.
+    /// </summary>
+    /// <param name="context">The database context to seed.</param>
     public static void Seed(DbContext context)
     {
         var any = context
@@ -28,7 +35,13 @@ public static partial class SeedData
         context.AddRange(movies);
         context.SaveChanges();
     }
-
+    
+    /// <summary>
+    /// Seeds the database with movie data asynchronously if it's empty.
+    /// </summary>
+    /// <param name="context">The database context to seed.</param>
+    /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public static async Task SeedAsync(DbContext context, CancellationToken cancellationToken = default)
     {
         var any = await context
