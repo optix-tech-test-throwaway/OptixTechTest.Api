@@ -34,6 +34,7 @@ public sealed class MovieService : IMovieService
             .Skip(searchInput.Cursor)
             .Take(searchInput.Limit)
             .Select(m => m.ToDto())
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
         
         // Calculate the next cursor or set to null if there are no more results
