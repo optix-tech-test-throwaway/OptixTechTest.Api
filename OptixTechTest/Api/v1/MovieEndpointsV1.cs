@@ -22,7 +22,6 @@ public static class MovieEndpointsV1
             .MapPost("search", SearchMovies)
             .AddEndpointFilter<ValidateMovieSearchInputFilter>()
             .ProducesValidationProblem()
-            .ProducesProblem((int)HttpStatusCode.InternalServerError)
             .WithName("SearchMovies");
     }
 

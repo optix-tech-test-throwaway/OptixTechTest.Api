@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using OptixTechTest.Api.Middleware;
 using OptixTechTest.Api.v1;
 using OptixTechTest.Api.v1.Validators;
 using OptixTechTest.Core.Models;
@@ -27,6 +28,9 @@ builder.Services.AddDbContextPool<MoviesDbContext>(opts =>
     opts.UseAsyncSeeding((context, _, ct) => SeedData.SeedAsync(context, ct));
 });
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IValidator<MovieSearchInput>, MovieSearchInputValidator>();
 
@@ -45,41 +49,12 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-app.UseExceptionHandler(exceptionHandlerApp => 
-    exceptionHandlerApp.Run(async context => 
-    {
-        var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
-        var exception = exceptionHandlerFeature?.Error;
+app.UseExceptionHandler();
 
-        switch (exception)
-        {
-            case JsonException:
-            case BadHttpRequestException:
-            case ValidationException:
-                await TypedResults
-                    .ValidationProblem(
-                        errors: new Dictionary<string, string[]> 
-                        { 
-                            { "body", [exception.Message]} 
-                        },
-                        title: "Validation Error",
-                        type: "https://tools.ietf.org/html/rfc7231#section-6.5.1"
-                    )
-                    .ExecuteAsync(context);
-                break;
-            default:
-                await TypedResults
-                    .Problem(
-                        statusCode: StatusCodes.Status500InternalServerError,
-                        title: exception?.GetType().Name,
-                        detail: exception?.Message)
-                    .ExecuteAsync(context);
-                break;
-        }
-    }));
-
-app.MapGroup("/api/v1/movies")
-    .MapMoviesApiV1();
+app
+    .MapGroup("/api/v1/movies")
+    .MapMoviesApiV1()
+    .ProducesProblem(StatusCodes.Status500InternalServerError);
 
 app.UseHttpsRedirection();
 app.Run();
