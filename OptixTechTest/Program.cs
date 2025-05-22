@@ -1,7 +1,5 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using FluentValidation;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using OptixTechTest.Api.Middleware;
 using OptixTechTest.Api.v1;
@@ -11,7 +9,6 @@ using OptixTechTest.Core.Services;
 using OptixTechTest.Domain;
 using OptixTechTest.Domain.Services;
 using Scalar.AspNetCore;
-using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 
 var builder = WebApplication.CreateBuilder(args);
 

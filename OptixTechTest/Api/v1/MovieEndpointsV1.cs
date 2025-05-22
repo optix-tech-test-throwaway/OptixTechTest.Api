@@ -1,4 +1,3 @@
-using System.Net;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using OptixTechTest.Api.v1.Filters;
