@@ -35,7 +35,7 @@ public abstract record SearchInputBase<TOrderBy>
     /// The zero-based index from which to start returning results. Defaults to 0.
     /// </value>
     [DefaultValue(0)]
-    public int Cursor { get;init; }
+    public int Cursor { get; init; }
 
     /// <summary>
     /// Gets the maximum number of results to return.

@@ -21,7 +21,7 @@ public sealed class MovieService : IMovieService
             .WhereIf(!string.IsNullOrEmpty(searchInput.NormalizeQuery()), 
                 movie => EF.Functions.ILike(movie.Title, $"%{EscapeLikePattern(searchInput.NormalizeQuery())}%"))
             .WhereIf(!string.IsNullOrEmpty(searchInput.NormalizeLanguage()), 
-                movie => EF.Functions.ILike(movie.OriginalLanguage, EscapeLikePattern(searchInput.NormalizeLanguage())))
+                movie => movie.OriginalLanguage == searchInput.NormalizeLanguage())
             .WhereIf(searchInput.Actors.Length != 0, 
                 movie => searchInput.Actors.All(actor => movie.Actors.Contains(actor)))
             .WhereIf(searchInput.Genres.Length != 0, 
@@ -69,11 +69,6 @@ public sealed class MovieService : IMovieService
 
     private static string EscapeLikePattern(string input)
     {
-        if (string.IsNullOrEmpty(input))
-        {
-            return input;
-        }
-
         // Escape special characters: \ % _
         return input
             .Replace("\\", @"\\")

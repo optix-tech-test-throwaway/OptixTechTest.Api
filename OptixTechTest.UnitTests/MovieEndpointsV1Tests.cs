@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
 using OptixTechTest.Api.v1;
 using OptixTechTest.Core.Models;
 using OptixTechTest.Domain.Services;
@@ -8,22 +7,20 @@ using OptixTechTest.UnitTests.Utilities;
 
 namespace OptixTechTest.UnitTests;
 
-[Collection("Sequential")]
-public class MovieEndpointsV1Tests
+public class MovieEndpointsV1Tests : IClassFixture<DatabaseFixture>
 {
+    private readonly DatabaseFixture _databaseFixture;
+
+    public MovieEndpointsV1Tests(DatabaseFixture databaseFixture)
+    {
+        _databaseFixture = databaseFixture;
+    }
+    
     [Fact]
     public async Task CanSearchMoviesByTitle()
     {
         // Arrange
-        await using var context = new MockDbContextFactory().CreateDbContext();
-        
-        await context.Database.EnsureDeletedAsync();
-        await context.Database.MigrateAsync();
-        
-        await context.AddRangeAsync(MockDbContextFactory.TestMovies);
-        await context.SaveChangesAsync();
-
-        var movieService = new MovieService(context);
+        var movieService = new MovieService(_databaseFixture.DbContext);
 
         // Act
         var result = await MovieEndpointsV1.SearchMovies(movieService, new MovieSearchInput
@@ -44,15 +41,7 @@ public class MovieEndpointsV1Tests
     public async Task CanLimitResultsPerSearch()
     {
         // Arrange
-        await using var context = new MockDbContextFactory().CreateDbContext();
-        
-        await context.Database.EnsureDeletedAsync();
-        await context.Database.MigrateAsync();
-        
-        await context.AddRangeAsync(MockDbContextFactory.TestMovies);
-        await context.SaveChangesAsync();
-
-        var movieService = new MovieService(context);
+        var movieService = new MovieService(_databaseFixture.DbContext);
 
         // Act
         var result = await MovieEndpointsV1.SearchMovies(movieService, new MovieSearchInput
@@ -72,15 +61,7 @@ public class MovieEndpointsV1Tests
     public async Task CanPageThroughResults()
     {
         // Arrange
-        await using var context = new MockDbContextFactory().CreateDbContext();
-        
-        await context.Database.EnsureDeletedAsync();
-        await context.Database.MigrateAsync();
-        
-        await context.AddRangeAsync(MockDbContextFactory.TestMovies);
-        await context.SaveChangesAsync();
-        
-        var movieService = new MovieService(context);
+        var movieService = new MovieService(_databaseFixture.DbContext);
 
         // Act
         var firstPageResult = await MovieEndpointsV1.SearchMovies(movieService, new MovieSearchInput
@@ -124,15 +105,7 @@ public class MovieEndpointsV1Tests
     public async Task CanFilterByGenre()
     {
         // Arrange
-        await using var context = new MockDbContextFactory().CreateDbContext();
-
-        await context.Database.EnsureDeletedAsync();
-        await context.Database.MigrateAsync();
-        
-        await context.AddRangeAsync(MockDbContextFactory.TestMovies);
-        await context.SaveChangesAsync();
-        
-        var movieService = new MovieService(context);
+        var movieService = new MovieService(_databaseFixture.DbContext);
 
         string[] genres = ["Comedy", "Romance"];
         
@@ -163,15 +136,7 @@ public class MovieEndpointsV1Tests
     public async Task CanFilterByActor()
     {
         // Arrange
-        await using var context = new MockDbContextFactory().CreateDbContext();
-
-        await context.Database.EnsureDeletedAsync();
-        await context.Database.MigrateAsync();
-        
-        await context.AddRangeAsync(MockDbContextFactory.TestMovies);
-        await context.SaveChangesAsync();
-        
-        var movieService = new MovieService(context);
+        var movieService = new MovieService(_databaseFixture.DbContext);
 
         string[] actors = ["Leonardo DiCaprio"];
         
@@ -202,15 +167,7 @@ public class MovieEndpointsV1Tests
     public async Task CanSortMoviesByReleaseDate()
     {
         // Arrange
-        await using var context = new MockDbContextFactory().CreateDbContext();
-        
-        await context.Database.EnsureDeletedAsync();
-        await context.Database.MigrateAsync();
-        
-        await context.AddRangeAsync(MockDbContextFactory.TestMovies);
-        await context.SaveChangesAsync();
-
-        var movieService = new MovieService(context);
+        var movieService = new MovieService(_databaseFixture.DbContext);
 
         // Act
         // Sort by release date in ascending order
@@ -259,15 +216,7 @@ public class MovieEndpointsV1Tests
     public async Task CanSortMoviesByTitle()
     {
         // Arrange
-        await using var context = new MockDbContextFactory().CreateDbContext();
-        
-        await context.Database.EnsureDeletedAsync();
-        await context.Database.MigrateAsync();
-        
-        await context.AddRangeAsync(MockDbContextFactory.TestMovies);
-        await context.SaveChangesAsync();
-
-        var movieService = new MovieService(context);
+        var movieService = new MovieService(_databaseFixture.DbContext);
 
         // Act
         // Sort by title in ascending order (A to Z)
