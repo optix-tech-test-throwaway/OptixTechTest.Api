@@ -37,9 +37,9 @@ The main project is split into a few namespaces:
 - Domain: this contains the implementation for the data retrieval service, the data context and model, and any other EF Core related code
 - Core: this contains the reusable models and interfaces used for both of the other namespaces
 
-If the application was to require scaling to support multiple host environments, it would be straightforward to move the above namespaces into their own projects and provide some DI extensions to register their features in any dependencies. We would then have a reusable API implementation that could be used by multiple web applications. 
+If the application was to require scaling to support multiple host environments, it would be straightforward to move the above namespaces into their own projects and provide some DI extensions to register their features in any dependencies. If the API layer was used as an `ApplicationPart`, we would then have a reusable API implementation that could be used by multiple web applications. 
 
-For example, as a public API, again as a subset of another private API, and perhaps then an API hosted by a larger Blazor application. The EFCore implementation of the domain could be swapped out to use Dapper. Additionally, say we needed a Discord bot that accessed the same data, we could create a project for that and use the Domain+Core layers. 
+For example, as a public API, again as a subset of another private API, and perhaps then an API hosted by a larger Blazor application. The EFCore implementation of the domain could be swapped out to use Dapper. Additionally, say we needed a Discord bot that accessed the same data, we could create a project for that and use the Domain+Core layers. A separate application could even inherit only the Core layer and re-implement the `IMovieService` as a client to the API application to communicate with the database indirectly.
 
 This level of abstraction was left out of the solution to make it easier to understand, given the specified requirements do not really call for modularization at this stage.
 
