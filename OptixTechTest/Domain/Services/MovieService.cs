@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using OptixTechTest.Core.Models;
 using OptixTechTest.Core.Services;
@@ -6,7 +5,6 @@ using OptixTechTest.Domain.Utilities;
 
 namespace OptixTechTest.Domain.Services;
 
-[SuppressMessage("Performance", "CA1862:Use the \'StringComparison\' method overloads to perform case-insensitive string comparisons")]
 public sealed class MovieService : IMovieService
 {
     private readonly MoviesDbContext _dbContext;
@@ -20,10 +18,26 @@ public sealed class MovieService : IMovieService
     {
         // Apply filters if defined
         var query = _dbContext.Movies
-            .WhereIf(!string.IsNullOrEmpty(searchInput.NormalizeQuery()), movie => movie.Title.ToLower().Contains(searchInput.NormalizeQuery()))
-            .WhereIf(!string.IsNullOrEmpty(searchInput.NormalizeLanguage()), movie => movie.OriginalLanguage.ToLower() == searchInput.NormalizeLanguage())
-            .WhereIf(searchInput.Actors.Length != 0, movie => searchInput.Actors.All(actor => movie.Actors.Contains(actor)))
-            .WhereIf(searchInput.Genres.Length != 0, movie => searchInput.Genres.All(genre => movie.Genres.Contains(genre)));
+            .WhereIf(!string.IsNullOrEmpty(searchInput.NormalizeQuery()), 
+                movie => EF.Functions.ILike(movie.Title, $"%{EscapeLikePattern(searchInput.NormalizeQuery())}%"))
+            .WhereIf(!string.IsNullOrEmpty(searchInput.NormalizeLanguage()), 
+                movie => EF.Functions.ILike(movie.OriginalLanguage, EscapeLikePattern(searchInput.NormalizeLanguage())))
+            .WhereIf(searchInput.Actors.Length != 0, 
+                movie => searchInput.Actors.All(actor => movie.Actors.Contains(actor)))
+            .WhereIf(searchInput.Genres.Length != 0, 
+                movie => searchInput.Genres.All(genre => movie.Genres.Contains(genre)))
+            .WhereIf(searchInput.MinPopularity.HasValue,
+                movie => movie.Popularity >= searchInput.MinPopularity)
+            .WhereIf(searchInput.MaxPopularity.HasValue, 
+                movie => movie.Popularity <= searchInput.MaxPopularity)
+            .WhereIf(searchInput.MinVoteAverage.HasValue, 
+                movie => movie.VoteAverage >= searchInput.MinVoteAverage)
+            .WhereIf(searchInput.MaxVoteAverage.HasValue, 
+                movie => movie.VoteAverage <= searchInput.MaxVoteAverage)
+            .WhereIf(searchInput.MinVoteCount.HasValue,
+                movie => movie.VoteCount >= searchInput.MinVoteCount)
+            .WhereIf(searchInput.MaxVoteCount.HasValue, 
+                movie => movie.VoteCount <= searchInput.MaxVoteCount);
 
         // Count how many results are available
         var count = await query.CountAsync(cancellationToken);
@@ -51,5 +65,19 @@ public sealed class MovieService : IMovieService
             TotalResultsCount = count,
             NextCursor = nextCursor
         };
+    }
+
+    private static string EscapeLikePattern(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return input;
+        }
+
+        // Escape special characters: \ % _
+        return input
+            .Replace("\\", @"\\")
+            .Replace("%", "\\%")
+            .Replace("_", "\\_");
     }
 }

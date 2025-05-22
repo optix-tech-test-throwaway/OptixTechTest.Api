@@ -190,7 +190,7 @@ public class MovieEndpointsV1Tests
             Assert.NotNull(movie.Actors);
             Assert.NotEmpty(movie.Actors);
         
-            // Check that all specified actors are present in the movie's genres
+            // Check that all specified actors are present in the movie's actors
             foreach (var actor in actors)
             {
                 Assert.Contains(actor, movie.Actors);

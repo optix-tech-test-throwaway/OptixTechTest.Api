@@ -56,6 +56,42 @@ public record MovieSearchInput : SearchInputBase<MovieOrderBy>
     /// Gets a collection of actor filters.
     /// </summary>
     public string[] Actors { get; init; } = [];
+
+    /// <summary>
+    /// Gets the minimum popularity value to filter movies by.
+    /// Only movies with popularity greater than or equal to this value will be returned.
+    /// </summary>
+    public decimal? MinPopularity { get; init; } = null;
+    
+    /// <summary>
+    /// Gets the maximum popularity value to filter movies by.
+    /// Only movies with popularity less than or equal to this value will be returned.
+    /// </summary>
+    public decimal? MaxPopularity { get; init; } = null;
+    
+    /// <summary>
+    /// Gets the minimum vote count to filter movies by.
+    /// Only movies with a vote count greater than or equal to this value will be returned.
+    /// </summary>
+    public int? MinVoteCount { get; init; } = null;
+
+    /// <summary>
+    /// Gets the maximum vote count to filter movies by.
+    /// Only movies with a vote count less than or equal to this value will be returned.
+    /// </summary>
+    public int? MaxVoteCount { get; init; } = null;
+    
+    /// <summary>
+    /// Gets the minimum vote average to filter movies by.
+    /// Only movies with a vote average greater than or equal to this value will be returned.
+    /// </summary>
+    public decimal? MinVoteAverage { get; init; } = null;
+    
+    /// <summary>
+    /// Gets or sets the maximum vote average to filter movies by.
+    /// Only movies with vote average less than or equal to this value will be returned.
+    /// </summary>
+    public decimal? MaxVoteAverage { get; init; } = null;
     
     /// <summary>
     /// Normalizes the query string by converting it to lowercase.

@@ -32,5 +32,41 @@ public class MovieSearchInputValidator : AbstractValidator<MovieSearchInput>
 
         RuleFor(m => m.OrderBy).IsInEnum();
         RuleFor(m => m.Direction).IsInEnum();
+        
+        When(m => m.MinPopularity.HasValue, () => {
+            RuleFor(m => m.MinPopularity)
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("Minimum popularity must be greater than or equal to 0");
+        });
+        
+        When(m => m.MaxPopularity.HasValue, () => {
+            RuleFor(m => m.MaxPopularity)
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("Maximum popularity must be greater than or equal to 0");
+        });
+        
+        When(m => m.MinVoteCount.HasValue, () => {
+            RuleFor(m => m.MinVoteCount)
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("Minimum vote count must be greater than or equal to 0");
+        });
+        
+        When(m => m.MaxVoteCount.HasValue, () => {
+            RuleFor(m => m.MaxVoteCount)
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("Maximum vote count must be greater than or equal to 0");
+        });
+        
+        When(m => m.MinVoteAverage.HasValue, () => {
+            RuleFor(m => m.MinVoteAverage)
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("Minimum vote average must be greater than or equal to 0");
+        });
+        
+        When(m => m.MaxVoteAverage.HasValue, () => {
+            RuleFor(m => m.MaxVoteAverage)
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("Maximum vote average must be greater than or equal to 0");
+        });
     }
 }

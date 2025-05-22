@@ -5,18 +5,33 @@ services:
       context: "/Users/ojm/source/repos/OptixTechTest.Api"
       dockerfile: "OptixTechTest/Dockerfile"
       target: "base"
+      args:
+        BUILD_CONFIGURATION: "Debug"
     command: []
     entrypoint:
-    - "dotnet"
-    - "/app/bin/Debug/net9.0/OptixTechTest.dll"
+    - "/opt/JetBrains/RiderDebuggerTools/linux-arm64/JetBrains.Debugger.Worker"
+    - "--runtimeconfig"
+    - "/opt/JetBrains/RiderDebuggerTools/JetBrains.Debugger.Worker.runtimeconfig.json"
+    - "--mode=server"
+    - "--frontend-port=57000"
+    - "--backend-port=57200"
+    - "--roslyn-worker-port=57401"
+    - "--timeout=60"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      RIDER_DEBUGGER_LOG_DIR: "/var/opt/JetBrains/RiderDebuggerTools"
+      RESHARPER_LOG_CONF: "/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
     image: "optixtechtest:dev"
-    ports: []
+    ports:
+    - "127.0.0.1:57001:57000"
+    - "127.0.0.1:57201:57200"
+    - "127.0.0.1:57401:57401"
     volumes:
     - "/Users/ojm/source/repos/OptixTechTest.Api/OptixTechTest:/app:rw"
     - "/Users/ojm/source/repos/OptixTechTest.Api:/src:rw"
     - "/Users/ojm/.microsoft/usersecrets:/home/app/.microsoft/usersecrets"
     - "/Users/ojm/.nuget/packages:/home/app/.nuget/packages"
+    - "/Users/ojm/.local/share/JetBrains/RiderRemoteDebugger/2025.2EAP1/LinuxArm64:/opt/JetBrains/RiderDebuggerTools"
+    - "/Users/ojm/Library/Logs/JetBrains/Rider2025.2/DebuggerWorker/JetBrains.Debugger.Worker.2025_5_22_11_18_45:/var/opt/JetBrains/RiderDebuggerTools:rw"
     working_dir: "/app"
