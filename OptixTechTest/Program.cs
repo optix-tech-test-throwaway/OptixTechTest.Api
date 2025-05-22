@@ -50,20 +50,32 @@ app.UseExceptionHandler(exceptionHandlerApp =>
     {
         var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
         var exception = exceptionHandlerFeature?.Error;
-        
-        var statusCode = exception switch 
+
+        switch (exception)
         {
-            ValidationException => StatusCodes.Status400BadRequest,
-            BadHttpRequestException => StatusCodes.Status400BadRequest,
-            JsonException => StatusCodes.Status400BadRequest,
-            _ => StatusCodes.Status500InternalServerError
-        };
-        
-        await TypedResults.Problem(
-            statusCode: statusCode,
-            title: exception?.GetType().Name,
-            detail: exception?.Message
-        ).ExecuteAsync(context);
+            case JsonException:
+            case BadHttpRequestException:
+            case ValidationException:
+                await TypedResults
+                    .ValidationProblem(
+                        errors: new Dictionary<string, string[]> 
+                        { 
+                            { "body", [exception.Message]} 
+                        },
+                        title: "Validation Error",
+                        type: "https://tools.ietf.org/html/rfc7231#section-6.5.1"
+                    )
+                    .ExecuteAsync(context);
+                break;
+            default:
+                await TypedResults
+                    .Problem(
+                        statusCode: StatusCodes.Status500InternalServerError,
+                        title: exception?.GetType().Name,
+                        detail: exception?.Message)
+                    .ExecuteAsync(context);
+                break;
+        }
     }));
 
 app.MapGroup("/api/v1/movies")

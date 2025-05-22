@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using OptixTechTest.Api.v1.Filters;
@@ -15,10 +16,13 @@ public static class MovieEndpointsV1
     /// Maps all movie-related API endpoints for the v1 version of the API.
     /// </summary>
     /// <param name="group">The route group builder to add the endpoints to.</param>
-    public static void MapMoviesApiV1(this RouteGroupBuilder group)
+    public static RouteHandlerBuilder MapMoviesApiV1(this RouteGroupBuilder group)
     {
-        group.MapPost("search", SearchMovies)
+        return group
+            .MapPost("search", SearchMovies)
             .AddEndpointFilter<ValidateMovieSearchInputFilter>()
+            .ProducesValidationProblem()
+            .ProducesProblem((int)HttpStatusCode.InternalServerError)
             .WithName("SearchMovies");
     }
 
